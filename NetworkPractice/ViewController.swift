@@ -9,12 +9,17 @@
 import UIKit
 
 class ViewController: UIViewController {
+    struct WebsiteDescription : Decodable{
+        let name : String
+        let description : String
+        let courses : [Course]
+    }
     
     struct Course : Decodable{
-        let id : Int
-        let name : String
-        let link : String
-        let imageUrl : String
+        let id : Int?
+        let name : String?
+        let link : String?
+        let imageUrl : String?
         
         //                swift 2/3/ObjC
         //        init(json: [String : Any]) {
@@ -29,7 +34,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        let jsonUrlString = "https://api.letsbuildthatapp.com/jsondecodable/courses"
+        let jsonUrlString = "https://api.letsbuildthatapp.com/jsondecodable/courses_missing_fields"
         guard let url = URL(string: jsonUrlString) else { return }
         
         URLSession.shared.dataTask(with: url) { (data, respone, err) in
@@ -43,8 +48,10 @@ class ViewController: UIViewController {
                 ////                print(json)
                 //                let course = Course(json: json)
                 //                print(course.name)
-                let course = try JSONDecoder().decode(Course.self, from: data)
-                print("\(course.id) \n \(course.name) \n \(course.link) \n \(course.imageUrl)")
+                let courses = try JSONDecoder().decode([Course].self, from: data)
+                print(courses[2].name!)
+                
+                
             }catch let jsonErr {
                 print(jsonErr)
             }
